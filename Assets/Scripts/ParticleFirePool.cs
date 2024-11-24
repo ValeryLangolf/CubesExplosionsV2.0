@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class ParticleFirePool : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem _particlePrefab;
+    [SerializeField] private ParticleSystem _prefab;
     [SerializeField] private Spawner _spawner;
     [SerializeField] private float _defaultScale = 1f;
 
-    private List<ParticleSystem> _pool = new();
-    private List<Cube> _cubes = new();
+    private readonly List<ParticleSystem> _pool = new();
+    private readonly List<Cube> _cubes = new();
 
     private void OnEnable()
     {
@@ -32,14 +32,14 @@ public class ParticleFirePool : MonoBehaviour
 
     private void Subscribe(Cube cube)
     {        
-        cube.Exploded += ShowFire;
-        cube.Separation += RemoveCube;
+        cube.Detonated += ShowFire;
+        cube.Separating += RemoveCube;
     }
 
     private void Unsubcribe(Cube cube)
     {
-        cube.Exploded -= ShowFire;
-        cube.Separation -= RemoveCube;
+        cube.Detonated -= ShowFire;
+        cube.Separating -= RemoveCube;
     }
 
     private void AddCube(Cube cube)
@@ -77,7 +77,7 @@ public class ParticleFirePool : MonoBehaviour
                 return fire;
         }
 
-        ParticleSystem fireInstance = Instantiate(_particlePrefab, transform);
+        ParticleSystem fireInstance = Instantiate(_prefab, transform);
         _pool.Add(fireInstance);
 
         return fireInstance;

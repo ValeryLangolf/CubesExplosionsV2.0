@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33dedb99c8850514298eb1327c676d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubeView: {fileID: 3397869639417003785}
-  _explosion: {fileID: 1154479249317080172}
+  _visualizer: {fileID: 3397869639417003785}
+  _detonator: {fileID: 1154479249317080172}
   _decayProbability: 1
   _robabilityMultiplier: 0.5
   _scaleMultiplier: 0.5
@@ -178,5 +178,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b6a19620a22b04a8f04812f6bd7a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _force: 300
+  _force: 350
   _radius: 0.7

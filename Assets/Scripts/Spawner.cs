@@ -8,9 +8,9 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int _minimumObjects = 2;
     [SerializeField] private int _maximumObjects = 6;
 
-    public event Action<Cube> CubeCreated;
-
     private List<Cube> _cubes;
+
+    public event Action<Cube> CubeCreated;
 
     private void Awake()
     {
@@ -35,14 +35,14 @@ public class Spawner : MonoBehaviour
 
     private void Subscribe(Cube cube)
     {
-        cube.Separation += CreateCubes;
-        cube.Exploded += RemoveCube;
+        cube.Separating += CreateCubes;
+        cube.Detonated += RemoveCube;
     }
 
     private void Unsubscribe(Cube cube)
     {
-        cube.Separation -= CreateCubes;
-        cube.Exploded -= RemoveCube;
+        cube.Separating -= CreateCubes;
+        cube.Detonated -= RemoveCube;
     }
 
     private void CreateCubes(Cube cubeSource)
@@ -50,8 +50,7 @@ public class Spawner : MonoBehaviour
         float decayProbability = cubeSource.DecayProbability;
         float scale = cubeSource.transform.localScale.x;
 
-        int maximumObjects = _maximumObjects + 1;
-        int countNewObjects = UnityEngine.Random.Range(_minimumObjects, maximumObjects);
+        int countNewObjects = UnityEngine.Random.Range(_minimumObjects, _maximumObjects + 1);
 
         List<Rigidbody> rigidbodies = new();
 
@@ -59,13 +58,15 @@ public class Spawner : MonoBehaviour
         {
             Cube newCube = Instantiate(cubeSource, cubeSource.transform.position, Quaternion.identity, transform);
 
-            rigidbodies.Add(newCube.GetComponent<Rigidbody>());
+            if (newCube.TryGetComponent(out Rigidbody rigidbody))
+                rigidbodies.Add(rigidbody);
+
             newCube.Initialize(scale, decayProbability);
-            
+
             AddCube(newCube);
         }
 
-        cubeSource.Explode(rigidbodies);
+        cubeSource.Detonate(rigidbodies);
         RemoveCube(cubeSource);
     }
 

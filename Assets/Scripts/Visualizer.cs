@@ -1,7 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
-public class CubeView : MonoBehaviour
+public class Visualizer : MonoBehaviour
 {
     [SerializeField] private Renderer _renderer;
 

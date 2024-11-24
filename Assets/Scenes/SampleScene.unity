@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 414233686}
   - component: {fileID: 414233687}
   m_Layer: 2
-  m_Name: Floor
+  m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -487,7 +487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d53ac92e55c314a90be1cb1afc999d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particlePrefab: {fileID: 1301697207402410478, guid: 39f852c28f9c3fd45a427c24f3564ba7, type: 3}
+  _prefab: {fileID: 1301697207402410478, guid: 39f852c28f9c3fd45a427c24f3564ba7, type: 3}
   _spawner: {fileID: 1003688380}
   _defaultScale: 1
 --- !u!4 &852962243

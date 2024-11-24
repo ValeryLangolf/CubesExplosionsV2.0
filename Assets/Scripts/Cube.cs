@@ -4,44 +4,28 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private CubeView _cubeView;
-    [SerializeField] private Explosion _explosion;
+    [SerializeField] private Visualizer _visualizer;
+    [SerializeField] private Detonator _detonator;
     [SerializeField] private float _decayProbability = 1f;
     [SerializeField] private float _robabilityMultiplier = 0.5f;
     [SerializeField] private float _scaleMultiplier = 0.5f;
 
-    public event Action<Cube> Separation;
-    public event Action<Cube> Exploded;
+    public event Action<Cube> Separating;
+    public event Action<Cube> Detonated;
 
     public float DecayProbability => _decayProbability;
-
-    private List<Rigidbody> CubesInRadius
-    {
-        get
-        {
-            Collider[] hits = Physics.OverlapSphere(transform.position, _explosion.RadiusFromScale);
-            List<Rigidbody> cubesRigidbodies = new List<Rigidbody>();
-
-            foreach (Collider hit in hits)
-            {
-                if (hit.attachedRigidbody != null)
-                    cubesRigidbodies.Add(hit.attachedRigidbody);
-            }
-
-            return cubesRigidbodies;
-        }
-    }
 
     private void OnMouseUpAsButton()
     {
         if (_decayProbability > UnityEngine.Random.value)
         {
-            Separation?.Invoke(this);
+            Separating?.Invoke(this);
         }
         else
         {
-            _explosion.Bang(CubesInRadius);
-            Exploded?.Invoke(this);
+            List<Rigidbody> cubesInRadius = FindCubesInRadius();
+            _detonator.Detonate(cubesInRadius);
+            Detonated?.Invoke(this);
         }            
 
         Destroy(gameObject);
@@ -50,11 +34,25 @@ public class Cube : MonoBehaviour
     public void Initialize(float scale, float decayProbability)
     {
         _decayProbability = decayProbability * _robabilityMultiplier;
-        _cubeView.Modify(scale * _scaleMultiplier);
+        _visualizer.Modify(scale * _scaleMultiplier);
     }
 
-    public void Explode(List<Rigidbody> rigidbodies)
+    public void Detonate(List<Rigidbody> rigidbodies)
     {
-        _explosion.Split(rigidbodies);
+        _detonator.Detonate(rigidbodies);
+    }
+
+    private List<Rigidbody> FindCubesInRadius()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, _detonator.RadiusFromScale);
+        List<Rigidbody> cubesRigidbodies = new();
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.attachedRigidbody != null)
+                cubesRigidbodies.Add(hit.attachedRigidbody);
+        }
+
+        return cubesRigidbodies;
     }
 }
